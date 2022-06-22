@@ -1,0 +1,31 @@
+<html>
+<head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+function ajaxPrint(){
+  $.ajax({
+    type: "POST",
+    url: "print-lwt-php.php",
+    data: $('#myForm').serialize(),
+  }).done(function( msg ) {
+    //alert( "Data Saved: " + msg );
+	
+  });
+}
+</script>
+</head>
+<body>
+	<form id="myForm" method="POST">	
+		Name : <input type="text" id="name" name="name" value="Michael Downy Van Johnson" /> <br />
+		Alamat : <input type="text" id="alamat" name="alamat" value="Jln. Jend Sudirman"> <br />
+		KTP : <input type="text" id="ktp" name="ktp" value="11111111111"> <br />
+		MOB : <input type="text" id="mob" name="mob" value="12345678"> <br />
+		Barcode : <input type="text" name="barcode" id="barcode" value="9876543210987"> <br />
+		No : <input type="text" id="no" name="no" value="45"> <br />
+		RT : <input type="text" id="rt" name="rt" value="950"> <br />
+		RW : <input type="text" id="rw" name="rw" value="70"> <br />
+		
+		<button type="button" id="button" class="button" onclick="ajaxPrint()" value="Print">Print Label</button>
+	</form>	
+</body>
+</html>

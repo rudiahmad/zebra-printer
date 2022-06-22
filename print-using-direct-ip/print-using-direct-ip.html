@@ -1,0 +1,84 @@
+<html>
+
+<head>
+	<title>Print Label</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+
+		function writeToSelectedPrinter() {
+			dataToWrite = "";
+			dataToWrite = dataToWrite + "^XA";
+			dataToWrite = dataToWrite + "^CFA,30";
+			dataToWrite = dataToWrite + "^FO50,130^FDName^FS";
+			dataToWrite = dataToWrite + "^FO50,170^FDAlamat:^FS";
+			dataToWrite = dataToWrite + "^FO50,210^FDKTP:^FS";
+			dataToWrite = dataToWrite + "^FO50,250^FDMobile:^FS";
+			dataToWrite = dataToWrite + "^CFA,30";
+			dataToWrite = dataToWrite + "^FO200,130^FDJohn Doe^FS";
+			dataToWrite = dataToWrite + "^FO200,170^FDJln Jend. Sudirman^FS";
+			dataToWrite = dataToWrite + "^FO200,210^FD123456789^FS";
+			dataToWrite = dataToWrite + "^FO200,250^FD12345678^FS";
+			dataToWrite = dataToWrite + "^FO600,170^FDNo^FS";
+			dataToWrite = dataToWrite + "^FO700,170^FDRT^FS";
+			dataToWrite = dataToWrite + "^FO600,270^FDRW^FS";
+			dataToWrite = dataToWrite + "^FO700,270^FDNo^FS";
+			dataToWrite = dataToWrite + "^FO590,310^FD1^FS";
+			dataToWrite = dataToWrite + "^FO710,310^FD2^FS";
+			dataToWrite = dataToWrite + "^FO710,210^FD3^FS";
+			dataToWrite = dataToWrite + "";
+			dataToWrite = dataToWrite + "^FX Third section with barcode.";			
+			dataToWrite = dataToWrite + "^A1N,30,22^BY2,2,70";
+			dataToWrite = dataToWrite + "^FO230,20^BC^FD123456789^FS"; 
+			dataToWrite = dataToWrite + "";
+			dataToWrite = dataToWrite + "^CFB,30";
+			dataToWrite = dataToWrite + "^FO600,210^FD4^FS^XZ";
+
+			$.ajax({
+				type: "POST",
+				url: "http://10.102.8.162/pstprnt",
+				data: dataToWrite,
+			}).done(function (msg) {
+				//alert( "Data Saved: " + msg );		
+			});
+
+			setTimeout(function () {
+				window.close();
+
+			}, 1000);
+			//window.close();
+		}
+
+	</script>
+	<style>
+		@media print {
+
+			.no-print,
+			.no-print * {
+				display: none !important;
+			}
+		}
+
+		.custom-btn {
+			width: 100px;
+			height: 30px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 13px;
+			border-radius: 5px;
+			padding: 5px;
+			cursor: pointer;
+			background-color: RGBA(73, 130, 5, 1);
+			color: white
+		}
+	</style>
+</head>
+
+<body>
+	<div style='width:400px;text-align:center'>
+		<input type='button' onclick='writeToSelectedPrinter();' value='Print' class='custom-btn no-print' />
+	</div>
+</body>
+
+</html>

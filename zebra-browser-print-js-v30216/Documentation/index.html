@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: </title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title"></h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Browser Print</h1><p>Communicate with local Zebra devices over USB, Network, and Bluetooth from a browser with an easy to use JavaScript API.</p>
+<p>Browser Print enables a website or web application to seamlessly communicate with locally connected devices on any supported platform.
+A single cross-platform JavaScript API abstracts away native intricacies and allows your team to focus on your product.</p>
+<h1>Installation</h1><p>Browser Print requires a native application and a JavaScript library to function. The JavaScript library communicates
+with the native client application, and the native client application communicates with the devices.</p>
+<h3>Native Client Application</h3><p>Download and install a native application <a href="https://www.zebra.com/us/en/products/software/barcode-printers/link-os/browser-print.html">here</a></p>
+<p>Applications are available and supported on the following platforms:</p>
+<ul>
+<li>Windows 7 or later</li>
+<li>MacOS Yosemite or later</li>
+<li>Android 7.0 or later</li>
+</ul>
+<p>Applications are available by request for Ubuntu 16.4 or later. Please contact a Zebra sales engineer for access to the
+ linux version of the application.</p>
+<h3>JavaScript Library</h3><p>Include the base Browser Print library in your web page</p>
+<pre class="prettyprint source lang-html"><code>&lt;script type=&quot;text/javascript&quot; src=&quot;BrowserPrint-3.0.216.min.js&quot;>&lt;/script></code></pre><p>Optionally, include the Zebra library. This library provides a higher level API on top of the base library that 
+simplifies communicating with printers. The Zebra library requires including the base library to function.</p>
+<pre class="prettyprint source lang-html"><code>&lt;script type=&quot;text/javascript&quot; src=&quot;BrowserPrint-Zebra-1.0.216.min.js&quot;>&lt;/script></code></pre><p>The JavaScript libraries are supported on the following Browsers:</p>
+<ul>
+<li>FireFox 66 or later</li>
+<li>Google Chrome 51 or later</li>
+<li>Internet Explorer 11</li>
+<li>Safari*</li>
+</ul>
+<p>*These browsers do not support http connections to the loopback address from a web page delivered over https. Using 
+these browsers requires the end user to accept a self-signed certificate.</p>
+<h1>Getting Started</h1><h3>Finding Devices</h3><p>Discover all of the devices that are available to the host system:</p>
+<pre class="prettyprint source lang-javascript"><code>BrowserPrint.getLocalDevices(function(deviceList){...});</code></pre><p>The success callback will be called when device discovery has completed, and it will be passed a list of devices as 
+<code>BrowserPrint.Device</code> objects.</p>
+<p>Discoverying devices can be quite time consuming when the client has enabled network and/or bluetooth discovery.
+Browser Print provides a mechanism for the user to set a default device to avoid having to run a full discovery on every 
+page load.
+Each category of device can have a single default set. The following code retrieves the default printer:</p>
+<pre class="prettyprint source lang-javascript"><code>BrowserPrint.getDefaultDevice(&quot;printer&quot;, function(device){...}, function(error){...});</code></pre><p>If the end user has set a default device for the specified type, the success callback will be called and passed the default 
+device as a <code>BrowserPrint.Device</code>. If no default device has been set, <code>null</code> will be passed to the callback. 
+It should be noted that there is no guarantee the default device is online, since it is returned statically without any 
+connection attempts by the client.</p>
+<h3>Communication</h3><p>Once a <code>BrowserPrint.Device</code> object is obtained, several methods are available to facilitate communicating with
+the device. The following examples assume the selected device is a Zebra printer set to use the ZPL language.</p>
+<h5>Writing</h5><p>The following command will print a configuration label:</p>
+<pre class="prettyprint source lang-javascript"><code>device.send(&quot;~wc&quot;, function(success){console.log(&quot;Sent to printer&quot;);}, function(error){console.error(&quot;Error:&quot; + error);});</code></pre><h5>Reading</h5><p>Bi-directional communication is supported. The following code shows how to send a request to the printer for it's
+configuration, and then reading the response back:</p>
+<pre class="prettyprint source lang-javascript"><code>device.send(&quot;^XA^HH^XZ&quot;, function(success){
+    device.read(function(response){
+       console.log(response); 
+    }, function(error){console.error(error);});
+}, function(error){console.error(error);});</code></pre><h5>Resource Conversion</h5><p>Browser Print supports converting resources to different formats. This is usually used to convert image files
+into printable formats, but other conversions may also be supported. The format conversions supported will depend
+on the client application version.</p>
+<pre class="prettyprint source lang-javascript"><code>BrowserPrint.convert(&quot;https://example.com/myimage.png&quot;, device, options, success, failure);</code></pre><p>The behavior of <code>BrowserPrint.convert</code> will depend strongly on the <code>options</code> provided. Through the options, 
+the application can control how the resource is manipulated, such as resizing or dithering. The options also control how
+the output is handled, such as sending the converted resource directly to the device or returning the result to the
+browser.</p>
+<h1>Zebra Library</h1><p>The Zebra Library is built on top of the base library by wrapping <code>BrowserPrint.Device</code> to provide an enhanced
+interface for easier integration and communication with Zebra devices.</p>
+<p>Features include communication queueing, parsing device responses, and automatically determining resource conversion 
+options based on device configuration.</p>
+<table>
+<thead>
+<tr>
+<th>WARNING: Creating a Zebra.Printer object initiates communication with the specified device.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Create a <code>Zebra.Printer</code> device by passing a <code>BrowserPrint.Device</code></p>
+<pre class="prettyprint source lang-javascript"><code>var zebraPrinter = new Zebra.Printer(device);</code></pre><p>Creating a <code>Zebra.Printer</code> object automatically queries the printer for its current configuration. This helps speed 
+up other calls that require the printer configuration information to function correctly. Any call to
+ <code>getConfiguration</code> will update the saved configuration stored in the <code>Zebra.Printer</code> object.</p>
+<h3>Query The Printer</h3><p>The library provides convenience methods for many common printer queries. These functions will query the printer for the
+information, and parse the responses into easy to use objects.</p>
+<p>Request the printer's status:</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.getStatus(function(status){console.log(status.getMessage());}, function(error){});</code></pre><p>Get printer configuration (This is a convenience method for the previous ^HH example)</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.getConfiguration(function(response){}, function(error){})</code></pre><p>Retrieve a SetGetDo(SGD) value:</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.getSGD(&quot;device.friendly_name&quot;, function(value){}, function(error){});</code></pre><p>Get model and firmware information</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.getInfo(function(info){}, function(error){});</code></pre><h3>Queued Communication</h3><p>JavaScript is asynchronous, but the printer is not. Sending multiple query commands to the printer in succession will
+most likely result in all of the responses being concatenated together into the response of the first read attempted</p>
+<p>The <code>Zebra.Printer</code> object will manage sending
+the query commands, reading and parsing the responses, and calling the proper callback methods so that requests are 
+handled one at a time.</p>
+<p>For example, if the following code is run:</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.getStatus(function(status){}, function(error){});
+zebraPrinter.getConfiguration(function(response){}, function(error){});
+zebraPrinter.getSGD(&quot;device.friendly_name&quot;, function(value){}, function(error){});</code></pre><p>Each request command will be sent to the printer, and the response to that command will be read and parsed before
+the next request is sent. Each request's callback function will only receive the device response for that request.</p>
+<h3>Resource Conversion</h3><p>The Zebra Library provides serveral convenience method for resource conversion. These methods accept the resource as a
+URL, or as a <code>blob</code></p>
+<p>Printing an image as a label will automatically resize the image to best fit the label, based on the print width and 
+label length:</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.printImageAsLabel(url, function(){}, function(error){});</code></pre><p>Images can also be converted and returned to the browser for inclusion in a separate label being generated. This is also 
+useful for images that are expected to be used often, as the conversion only needs to be done once.</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.getConvertedResource(url, options, function(imagaData){}, function(error){});</code></pre><p>Images can also be stored to the printer to avoid sending the data with every use. The following will convert the
+provided resource and return the name of the file as it is stored on the printer.</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.storeConvertedResource(url, options, function(fileName){}, function(error){});</code></pre><h3>Promises</h3><p>Most of the <code>Zebra.Printer</code> methods accept <code>success</code> and <code>failure</code> functions as callbacks for when the 
+operation completes. However, if neither <code>success</code> or <code>failure</code> are supplied to the method call, the method will
+return a <code>Promise</code>.</p>
+<p>The promise API makes it easier to chain multiple commands together. The following code checks if the printer is ready
+to print, and if it is, a configuration label is printed. If the printer is not ready, an error is thrown and handled in
+the <code>catch</code> function.</p>
+<pre class="prettyprint source lang-javascript"><code>zebraPrinter.isPrinterReady().then(function(){
+    return zebraPrinter.write(&quot;~wc&quot;);
+}).catch(function(error){
+    console.error(error);
+})</code></pre><h1>Best Practices</h1><p>These are general guidelines for using this library efficiently and successfully. The specific requirements of your 
+application may not apply to all of these suggestions.</p>
+<h3>Client Installation</h3><p>If you expect end users will access your web page without installing the native client prior to visiting, the page should
+detect failure to communicate with the native application and provide instructions to install it.</p>
+<h3>Client Compatibility</h3><p>It is possible that a user will have a version of the native client application installed on their machine that is older 
+or newer than the version your web page was developed for. The native client application will attempt to maintain backwards 
+compatibility with older versions of the JavaScript library whenever possible, but it is the web application developer's 
+responsibility to ensure their application only uses features available from the version of the user's installed client application.</p>
+<p>Information about the native client application can be obtained by calling <code>BrowserPrint.getApplicationConfiguration()</code> 
+This call will return information about the client, such as <code>version</code>, <code>build_number</code>, <code>api_level</code>, and 
+the operating system <code>platform</code>.</p>
+<p>The JavaScript documentation lists a &quot;Client API Level&quot; value for every function. This is the minimum Client API level required
+to use that function. If your web application requires functionality only available in a higher API Level, the application
+should check the user's native application API level and either request the user to upgrade their native application, or provide 
+reduced functionality.</p>
+<h3>Device Management</h3><p>On page load, your application should call both <code>BrowserPrint.getDefaultDevice()</code> and 
+<code>BrowserPrint.getLocalDevices()</code>. The 
+application should assume the user wants to use the default device, but provide the user the ability to change the 
+device and select from the list of available devices. Calling both methods on page load makes device discovery appear 
+faster to the user.</p>
+<h3>Printing</h3><p>The application should confirm that the printer is ready to print before sending a print job to the printer. Calling the
+<code>zebraDevice.isReadyToPrint()</code> method before sending a job will tell the application if the printer is ready to 
+receive print jobs. Calling the same <code>zebraDevice.isReadyToPrint()</code> method after sending a print job will inform
+your application if the printer has developed any errors since the last print job was sent. Any errors developed after a job
+is sent likely means the error occurred while printing the job, indicating the last job is not likely to have completed 
+successfully. If the printer is not ready to print, calling <code>zebraDevice.getStatus()</code> will inform the application of 
+the exact error.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-BrowserPrint.html">BrowserPrint</a></li><li><a href="module-Zebra.html">Zebra</a></li></ul><h3>Classes</h3><ul><li><a href="module-BrowserPrint-BrowserPrint.ApplicationConfiguration.html">ApplicationConfiguration</a></li><li><a href="module-BrowserPrint-BrowserPrint.Device.html">Device</a></li><li><a href="Zebra.Printer.html">Printer</a></li><li><a href="Zebra.Printer.Configuration.html">Configuration</a></li><li><a href="Zebra.Printer.Info.html">Info</a></li><li><a href="Zebra.Printer.Status.html">Status</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Thu Dec 12 2019 14:24:08 GMT-0600 (CST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
